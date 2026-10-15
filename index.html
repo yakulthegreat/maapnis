@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <!-- Ini kunci agar web otomatis menyesuaikan ukuran layar HP -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>jan malah</title>
+</head>
+<body>
+
+  <h1 id="judul">nis masih ngambek?</h1>
+  
+  <!-- max-width: 100% membuat gambar otomatis mengecil jika layar HP-nya kecil -->
+  <img id="gambar" src="gambar1.jfif" style="max-width: 100%; height: auto;" width="300" height="300" alt="GIF">
+  
+  <h1 id="subjudul">maapin acu yah pwliss(◞ _◟)</h1>
+
+  <!-- Kontainer polos untuk area gerak tombol -->
+  <div id="btnWrapper" style="position: relative; width: 100%; height: 350px;">
+   <!-- Contoh memperbesar ukuran teks dan tombolnya -->
+<button id="btn_mau" onclick="terimaKasih()" style="position: absolute; left: 10px; top: 10px; font-size: 20px; padding: 15px 25px;">Iya</button>
+<button id="btn_gamau" onclick="gamau()" style="position: absolute; left: 120px; top: 10px; font-size: 20px; padding: 15px 25px;">Ga</button>
+  </div>
+
+  <script>
+    let scaleValue = 1;
+
+    function terimaKasih() {
+      document.getElementById("judul").innerText = "horeee dimaapin nisaaaa◝(ᵔᗜᵔ)◜";
+      document.getElementById("subjudul").style.display = "none";
+      document.getElementById("btnWrapper").style.display = "none";
+      document.getElementById("gambar").src = "gambar2.jfif"; 
+    }
+
+    function gamau() {
+      var mau = document.getElementById("btn_mau");
+      var gamauBtn = document.getElementById("btn_gamau");
+      var wrapper = document.getElementById("btnWrapper");
+      
+      // Perbesar ukuran tombol "Iya" secara bertahap
+      scaleValue += 0.5;
+      mau.style.transform = `scale(${scaleValue})`;
+      mau.style.transformOrigin = "center center";
+
+      // Mendapatkan lebar layar secara dinamis mengikuti HP
+      var wrapperWidth = wrapper.clientWidth || window.innerWidth - 30;
+      var wrapperHeight = wrapper.clientHeight || 350;
+
+      var mauOrigW = mau.offsetWidth;
+      var mauOrigH = mau.offsetHeight;
+      var gaW = gamauBtn.offsetWidth;
+      var gaH = gamauBtn.offsetHeight;
+
+      var scaledMauW = mauOrigW * scaleValue;
+      var scaledMauH = mauOrigH * scaleValue;
+
+      let maxAttempts = 200;
+      let found = false;
+      let mauBaseX, mauBaseY, gaX, gaY;
+      let visualLeft, visualTop, visualRight, visualBottom;
+      let gaRight, gaBottom;
+
+      // Logika agar posisi tombol acak, tidak saling menimpa, dan tetap di dalam layar
+      for (let i = 0; i < maxAttempts; i++) {
+        let maxVisualX = wrapperWidth - scaledMauW;
+        let maxVisualY = wrapperHeight - scaledMauH;
+        
+        if (maxVisualX < 0) maxVisualX = 0;
+        if (maxVisualY < 0) maxVisualY = 0;
+
+        visualLeft = Math.random() * maxVisualX;
+        visualTop = Math.random() * maxVisualY;
+        
+        mauBaseX = visualLeft + (scaledMauW - mauOrigW) / 2;
+        mauBaseY = visualTop + (scaledMauH - mauOrigH) / 2;
+        
+        visualRight = visualLeft + scaledMauW;
+        visualBottom = visualTop + scaledMauH;
+
+        gaX = Math.random() * (wrapperWidth - gaW);
+        gaY = Math.random() * (wrapperHeight - gaH);
+        gaRight = gaX + gaW;
+        gaBottom = gaY + gaH;
+
+        let overlap = !(
+          gaRight < visualLeft ||
+          gaX > visualRight ||
+          gaBottom < visualTop ||
+          gaY > visualBottom
+        );
+
+        if (!overlap) {
+          found = true;
+          break;
+        }
+      }
+
+      if (found) {
+        mau.style.left = mauBaseX + "px";
+        mau.style.top = mauBaseY + "px";
+        gamauBtn.style.left = gaX + "px";
+        gamauBtn.style.top = gaY + "px";
+      }
+    }
+  </script>
+</body>
+</html>
